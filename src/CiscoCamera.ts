@@ -48,7 +48,8 @@ export class CiscoCamera extends ScryptedDeviceBase implements VideoCamera, Sett
 
     private async startExpressProxy() {
         const app = express.default();
-        const port = parseInt(this.storage.getItem("proxyPort") || "3000");
+        const parsedPort = parseInt(this.storage.getItem("proxyPort") || "3000", 10);
+        const port = (Number.isFinite(parsedPort) && parsedPort >= 1 && parsedPort <= 65535) ? parsedPort : 3000;
         const proxyUsername = this.storage.getItem("proxyUsername") || "admin";
         const proxyPassword = this.storage.getItem("proxyPassword");
 
