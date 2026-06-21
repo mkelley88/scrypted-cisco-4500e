@@ -103,7 +103,14 @@ export class CiscoCamera extends ScryptedDeviceBase implements VideoCamera, Sett
                 const headers = { ...req.headers };
                 delete headers.host;
                 if (headers.referer) {
-                    headers.referer = headers.referer.replace(`http://${req.headers.host}`, CAMERA_URL);
+                    try {
+                        const refUrl = new URL(headers.referer as string);
+                        refUrl.protocol = 'https:';
+                        refUrl.host = ipAddress;
+                        headers.referer = refUrl.toString();
+                    } catch {
+                        delete headers.referer;
+                    }
                 }
 
                 const response = await axios.get(CAMERA_URL + req.originalUrl, { 
