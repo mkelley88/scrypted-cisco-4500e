@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.9] - 2026-06-21
+
+### Changed
+- Updated documentation in the README with additional deployment instructions and formatting improvements.
 ## [1.1.8] - 2026-06-21
 
 ### Fixed
