@@ -47,6 +47,11 @@ export class CiscoCamera extends ScryptedDeviceBase implements VideoCamera, Sett
 
 
     private async startExpressProxy() {
+        const enableWebProxy = this.storage.getItem("enableWebProxy") !== "false";
+        if (!enableWebProxy) {
+            return;
+        }
+
         const app = express.default();
         const parsedPort = parseInt(this.storage.getItem("proxyPort") || "3000", 10);
         const port = (Number.isFinite(parsedPort) && parsedPort >= 1 && parsedPort <= 65535) ? parsedPort : 3000;
@@ -205,6 +210,14 @@ export class CiscoCamera extends ScryptedDeviceBase implements VideoCamera, Sett
                 type: "password",
             },
             {
+                title: "Enable Web Proxy",
+                group: "Web Proxy Settings",
+                key: "enableWebProxy",
+                type: "boolean",
+                description: "Enable the modernized Web UI Proxy for accessing the camera settings",
+                value: this.storage.getItem("enableWebProxy") !== "false",
+            },
+            {
                 title: "Web Proxy Port",
                 group: "Web Proxy Settings",
                 key: "proxyPort",
@@ -248,7 +261,7 @@ export class CiscoCamera extends ScryptedDeviceBase implements VideoCamera, Sett
             });
         }
         // Restart proxy if proxy settings changed
-        if (key === "proxyPort" || key === "proxyUsername" || key === "proxyPassword" || key === "ipAddress") {
+        if (key === "proxyPort" || key === "proxyUsername" || key === "proxyPassword" || key === "ipAddress" || key === "enableWebProxy") {
             this.restartProxy();
         }
     }
