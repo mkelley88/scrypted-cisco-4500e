@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.8] - 2026-06-21
+
+### Fixed
+- Fixed Scrypted Server crashing (`engine.io-client:api` error) during plugin installation from the NPM registry. The package is now correctly built in production mode (`dist/plugin.zip`) and no longer relies on the deprecated `main` entrypoint field.
 ## [1.1.7] - 2026-06-21
 
 ### Fixed
