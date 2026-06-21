@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.3] - 2026-06-21
+
+### Changed
+- Fixed GitHub Actions release workflow syntax.
+- Migrated release pipeline from manual UI dispatch to standard tag-triggered automated releases.
 ## [1.1.2] - 2026-06-21
 
 ### Changed
