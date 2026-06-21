@@ -7,7 +7,7 @@ These older Cisco cameras rely on outdated browser technologies (like ActiveX an
 ## Features
 
 - **Built-in Modern Web Proxy**: The plugin hosts a modernized version of the camera's original Web UI on a custom port, stripping out the broken ActiveX controls and replacing them with a native HTML5 video player. You can configure camera settings (like motion detection and resolution) right from any modern browser.
-- **Embedded `go2rtc` Service**: To solve the visual artifacting and connection instability, the plugin automatically downloads and runs `go2rtc` locally. It securely intercepts the video feed over a stable TCP connection and re-broadcasts it as an ultra-stable, artifact-free RTSP feed into Scrypted.
+- **Direct FFmpeg Stream Handling**: To solve the visual artifacting and connection instability without unnecessary overhead, the plugin securely pulls the video feed over a forced TCP connection and natively feeds it into Scrypted's FFmpeg rebroadcaster, completely eliminating UDP packet loss smearing.
 - **Auto-Session Management**: The plugin dynamically scrapes and maintains the required authentication `sessionID` from the camera, ensuring the video stream never times out or drops due to expired credentials.
 - **Zero Configuration Files**: Everything is configured natively through the Scrypted UI.
 
