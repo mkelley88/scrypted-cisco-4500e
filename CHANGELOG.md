@@ -2,10 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.5] - 2026-06-21
+
+### Fixed
+- Added `"scrypted"` keyword to `package.json`.
 ## [1.1.4] - 2026-06-21
 
 ### Fixed
-- Added GitHub repository URL to `package.json` to satisfy NPM Provenance validation.
+- Added GitHub repository URL to `package.json`.
 
 ## [1.1.3] - 2026-06-21
 
