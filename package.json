@@ -7,7 +7,11 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "scrypted-webpack"
   },
-  "keywords": [],
+  "keywords": [
+    "scrypted",
+    "cisco",
+    "camera"
+  ],
   "author": "Matthew T Kelley",
   "license": "MIT",
   "repository": {
