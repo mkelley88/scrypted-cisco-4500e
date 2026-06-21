@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.0] - 2026-06-21
+
+### Added
+- Added an "Enable Web Proxy" setting in the plugin configuration to allow disabling the proxy when not needed.
+
+### Changed
+- Replaced naive string comparisons with timing-safe comparisons for proxy authentication.
+- Invalidated session caches immediately upon credential or IP address changes to prevent authentication errors.
+- Hardened referer replacement logic using a protocol-agnostic URL parser.
+- Optimized plugin bundle size by removing dead legacy code and unused heavy dependencies (`ssh2`).
+
+### Fixed
+- Fixed an issue where the proxy server failed to start upon initial device creation due to a configuration race condition.
+- Fixed an issue where rapid settings changes could cause the proxy server to double-bind or fail due to a restart race condition.
+- Fixed silent failure of the proxy server port binding by adding NaN and range validation.
+- Fixed a potential SSRF vulnerability by explicitly validating the IP address format before saving it to storage.
 ## [1.1.9] - 2026-06-21
 
 ### Changed
