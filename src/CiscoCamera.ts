@@ -230,6 +230,13 @@ export class CiscoCamera extends ScryptedDeviceBase implements VideoCamera, Sett
     }
 
     async putSetting(key: string, value: string | number | boolean): Promise<void> {
+        // Validate IP address format before saving
+        if (key === "ipAddress") {
+            const ipRegex = /^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/;
+            if (!ipRegex.test(value.toString())) {
+                throw new Error("Invalid IP address format. Expected format: 192.168.1.100");
+            }
+        }
         this.storage.setItem(key, value.toString());
         // Restart proxy if proxy settings changed
         if (key === "proxyPort" || key === "proxyUsername" || key === "proxyPassword" || key === "ipAddress") {
