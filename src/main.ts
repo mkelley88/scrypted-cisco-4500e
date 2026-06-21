@@ -86,10 +86,12 @@ class CiscoCameraProvider extends ScryptedDeviceBase implements DeviceProvider, 
             }
         });
 
-        const device = new CiscoCamera(nativeId);
-        await device.storage.setItem("ipAddress", ipAddress);
-        await device.storage.setItem("username", username);
-        await device.storage.setItem("password", password);
+        // Write settings BEFORE constructing the device, so the constructor
+        // can read them when it starts background services.
+        const storage = deviceManager.getDeviceStorage(nativeId);
+        storage.setItem("ipAddress", ipAddress);
+        storage.setItem("username", username);
+        storage.setItem("password", password);
 
         return nativeId;
     }
