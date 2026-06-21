@@ -1,10 +1,10 @@
-name: Publish to NPM
+name: Build, Release & Publish
 
 on:
   workflow_dispatch:
     inputs:
       bump_type:
-        description: 'Version bump type'
+        description: 'Version bump type (patch, minor, major)'
         required: true
         default: 'patch'
         type: choice
@@ -19,13 +19,15 @@ permissions:
   id-token: write
 
 jobs:
-  publish:
-    name: Build & Publish Plugin
+  release:
+    name: Build, Release, & Publish Plugin
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Required for pushing tags back
 
       - name: Setup NodeJS
         uses: actions/setup-node@v4
@@ -45,12 +47,32 @@ jobs:
         run: npm run build
 
       - name: Bump Version
-        run: npm version ${{ github.event.inputs.bump_type }}
+        id: bump
+        run: |
+          # Bumps the version in package.json and creates a git tag automatically
+          NEW_VERSION=$(npm version ${{ github.event.inputs.bump_type }})
+          echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
+
+      - name: Pack Plugin
+        id: pack
+        run: |
+          # Generate the .tgz file
+          TARBALL=$(npm pack)
+          echo "tarball=$TARBALL" >> $GITHUB_OUTPUT
+
+      - name: Push Version Bump & Tag
+        run: git push --follow-tags
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.bump.outputs.new_version }}
+          files: ${{ steps.pack.outputs.tarball }}
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Publish to NPM
         run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-      - name: Push Version Bump
-        run: git push --follow-tags
