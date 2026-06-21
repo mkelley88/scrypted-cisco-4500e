@@ -239,6 +239,14 @@ export class CiscoCamera extends ScryptedDeviceBase implements VideoCamera, Sett
             }
         }
         this.storage.setItem(key, value.toString());
+        // Invalidate cached session and proactively refresh when credentials change
+        if (key === "password" || key === "username" || key === "ipAddress") {
+            this.cachedSessionId = undefined;
+            this.cachedSessionTime = 0;
+            this.getSessionID().catch(e => {
+                this.console.warn("Failed to refresh session after credential change:", e);
+            });
+        }
         // Restart proxy if proxy settings changed
         if (key === "proxyPort" || key === "proxyUsername" || key === "proxyPassword" || key === "ipAddress") {
             this.restartProxy();
