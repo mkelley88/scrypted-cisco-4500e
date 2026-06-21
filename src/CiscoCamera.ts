@@ -33,6 +33,7 @@ function sanitizeNvramValue(value: string): string {
 
 export class CiscoCamera extends ScryptedDeviceBase implements VideoCamera, Settings {
     private expressServer?: http.Server;
+    private isRestartingProxy: boolean = false;
     private cachedSessionId?: string;
     private cachedSessionTime: number = 0;
 
@@ -232,14 +233,28 @@ export class CiscoCamera extends ScryptedDeviceBase implements VideoCamera, Sett
         this.storage.setItem(key, value.toString());
         // Restart proxy if proxy settings changed
         if (key === "proxyPort" || key === "proxyUsername" || key === "proxyPassword" || key === "ipAddress") {
-            if (this.expressServer) {
-                this.console.log("Proxy settings changed, restarting Express server...");
-                this.expressServer.close(() => {
-                    this.startExpressProxy().catch(e => this.console.error("Failed to restart Express server:", e));
-                });
-            } else {
-                this.startExpressProxy().catch(e => this.console.error("Failed to restart Express server:", e));
-            }
+            this.restartProxy();
+        }
+    }
+
+    private restartProxy() {
+        if (this.isRestartingProxy) return;
+        this.isRestartingProxy = true;
+
+        const oldServer = this.expressServer;
+        this.expressServer = undefined;
+
+        const startNew = () => {
+            this.startExpressProxy()
+                .catch(e => this.console.error("Failed to restart Express server:", e))
+                .finally(() => { this.isRestartingProxy = false; });
+        };
+
+        if (oldServer) {
+            this.console.log("Proxy settings changed, restarting Express server...");
+            oldServer.close(startNew);
+        } else {
+            startNew();
         }
     }
 
