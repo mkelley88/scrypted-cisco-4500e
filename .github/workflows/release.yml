@@ -1,24 +1,42 @@
-name: Release
+name: Publish to NPM
 
 on:
-  push:
-    tags:
-      - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
   workflow_dispatch:
+    inputs:
+      bump_type:
+        description: 'Version bump type'
+        required: true
+        default: 'patch'
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+
+permissions:
+  contents: write
+  pull-requests: write
+  id-token: write
 
 jobs:
-  build:
-    name: Build & Release Plugin
+  publish:
+    name: Build & Publish Plugin
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout Code
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: Setup NodeJS
         uses: actions/setup-node@v4
         with:
           node-version: '18'
-          cache: 'npm'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Setup Git
+        run: |
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
 
       - name: Install Dependencies
         run: npm ci
@@ -26,18 +44,13 @@ jobs:
       - name: Build Plugin
         run: npm run build
 
-      - name: Pack Plugin
-        id: pack
-        run: |
-          # Use npm pack to generate the .tgz artifact
-          TARBALL=$(npm pack)
-          echo "tarball=$TARBALL" >> $GITHUB_OUTPUT
+      - name: Bump Version
+        run: npm version ${{ github.event.inputs.bump_type }}
 
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
-        if: startsWith(github.ref, 'refs/tags/')
-        with:
-          files: ${{ steps.pack.outputs.tarball }}
-          generate_release_notes: true
+      - name: Publish to NPM
+        run: npm publish
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Push Version Bump
+        run: git push --follow-tags
