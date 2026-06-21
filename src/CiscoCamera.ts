@@ -9,27 +9,15 @@ import {
     ScryptedInterface,
 } from "@scrypted/sdk";
 import sdk from "@scrypted/sdk";
-import { Client } from "ssh2";
 import axios from "axios";
 import * as express from "express";
 import { createProxyMiddleware } from "http-proxy-middleware";
 import * as basicAuth from "basic-auth";
-import * as fs from "fs";
-import * as path from "path";
 import * as https from "https";
 import * as crypto from "crypto";
 import * as http from "http";
 
 const { mediaManager, deviceManager } = sdk;
-
-const SAFE_NVRAM_VALUE = /^[a-zA-Z0-9._\-:\/@ ]*$/;
-
-function sanitizeNvramValue(value: string): string {
-    if (!SAFE_NVRAM_VALUE.test(value)) {
-        throw new Error(`Refusing to set nvram value containing unsafe characters: "${value}"`);
-    }
-    return value;
-}
 
 export class CiscoCamera extends ScryptedDeviceBase implements VideoCamera, Settings {
     private expressServer?: http.Server;
