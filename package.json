@@ -1,6 +1,6 @@
 {
   "name": "scrypted-cisco-camera",
-  "version": "1.1.6",
+  "version": "1.1.7",
   "description": "Cisco IP Camera Plugin",
   "main": "src/main.ts",
   "files": [
