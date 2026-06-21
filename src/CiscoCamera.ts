@@ -71,7 +71,19 @@ export class CiscoCamera extends ScryptedDeviceBase implements VideoCamera, Sett
         app.use((req, res, next) => {
             if (!proxyPassword) return next(); // Skip auth if no password configured
             const user = basicAuth.default(req);
-            if (!user || user.name !== proxyUsername || user.pass !== proxyPassword) {
+            if (!user) {
+                res.set('WWW-Authenticate', 'Basic realm="Cisco Camera Web Proxy"');
+                return res.status(401).send('Authentication required.');
+            }
+            const nameMatch = crypto.timingSafeEqual(
+                Buffer.from(user.name.padEnd(256)),
+                Buffer.from(proxyUsername.padEnd(256))
+            );
+            const passMatch = crypto.timingSafeEqual(
+                Buffer.from(user.pass.padEnd(256)),
+                Buffer.from(proxyPassword.padEnd(256))
+            );
+            if (!nameMatch || !passMatch) {
                 res.set('WWW-Authenticate', 'Basic realm="Cisco Camera Web Proxy"');
                 return res.status(401).send('Authentication required.');
             }
