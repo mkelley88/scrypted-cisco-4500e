@@ -8,8 +8,12 @@
     "build": "scrypted-webpack"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Matthew T Kelley",
+  "license": "MIT",
+  "repository": {
+    "type":"git",
+    "url":"git+https://github.com/mkelley88/scrypted-cisco-4500e.git"
+  },
   "type": "commonjs",
   "dependencies": {
     "@scrypted/sdk": "^0.5.59",
