@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.6] - 2026-06-21
+
+### Fixed
+- Fixed NPM package configuration to correctly bundle and expose the compiled `out/main.nodejs.js` build artifact.
 ## [1.1.5] - 2026-06-21
 
 ### Fixed
