@@ -379,7 +379,7 @@ export class CiscoCamera extends ScryptedDeviceBase implements VideoCamera, Sett
                 video: {
                     codec: 'h264',
                 }
-            } as any
+            } as ResponseMediaStreamOptions & { tool: string }
         ];
     }
 }
