@@ -52,5 +52,4 @@ In the plugin's "Stream Settings" page, you will find several required fields:
 
 After saving your settings, simply navigate to `http://<SCRYPTED_IP>:<PROXY_PORT>` in your browser to access the modernized camera interface!
 
-## Troubleshooting
-- **Lockout Loops**: If your camera gets stuck in an "Illegal Login" redirect loop on its native Web UI, this usually means its internal `flash.dat` config is corrupted. You will need to SSH into the camera and run `mv /usr/conf/dsp/flash.dat /usr/conf/dsp/flash.dat.bak`, then `reboot` the camera to restore defaults. The plugin handles settings safely to prevent this.
+
