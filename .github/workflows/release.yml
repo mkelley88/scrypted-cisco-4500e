@@ -30,9 +30,9 @@ jobs:
           fetch-depth: 0 # Required for pushing tags back
 
       - name: Setup NodeJS
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
-          node-version: '22'
+          node-version: '24'
           registry-url: 'https://registry.npmjs.org'
 
       - name: Setup Git
@@ -73,4 +73,5 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Publish to NPM
-        run: npm publish --provenance --access public
+        # run: npm publish --provenance --access public
+	run: npx npm@latest publish
